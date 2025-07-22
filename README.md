@@ -18,12 +18,13 @@ This is the backend REST API for the Online MCQ System developed as part of the 
 
 ## 🗂️ Project Structure
 
-backend/
-├── controller/ # API endpoints
-├── dto/ # Data Transfer Objects
-├── entity/ # JPA Entities
-├── repository/ # Spring Data JPA Repos
-├── service/ # Business Logic
+backend/<br>
+├── controller/ # API endpoints<br>
+├── dto/ # Data Transfer Objects<br>
+├── entity/ # JPA Entities<br>
+├── repository/ # Spring Data JPA Repos<br>
+├── service/ # contract for impl<br>
+├── service impl/ # Business Logic<br>
 └── config/ # Config files (ModelMapper, etc.)
 
 
@@ -44,13 +45,12 @@ backend/
 - Create a MySQL database named: `mcq_system`
 
 ```sql
-CREATE DATABASE `mcq_system`;
-
-       
+CREATE DATABASE `mcq_system`;   
 ```
 ---
 
-### 3️⃣ Configure `application.properties`
+### 3️⃣ Configure 
+`application.properties`
 
 Update the following values in:
 
