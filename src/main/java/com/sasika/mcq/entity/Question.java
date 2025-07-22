@@ -1,5 +1,6 @@
 package com.sasika.mcq.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,12 +19,16 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "exam_id")
+    @JsonIgnore
     private Exam exam;
+
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers;
 
     private String questionText;
 
     @ElementCollection
-    private List<String> option;
+    private List<String> options;
 
     private String correctOption;
 

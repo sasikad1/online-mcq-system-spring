@@ -17,9 +17,11 @@ public class Answer {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "result_id")
     private Result result;
 
     @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     private String selectedOption;
