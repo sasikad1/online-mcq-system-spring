@@ -25,6 +25,11 @@ public class Answer {
     private Question question;
 
     private String selectedOption;
-    private boolean isCorrect;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isCorrect = false;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

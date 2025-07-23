@@ -28,61 +28,26 @@ public class ResultServiceImpl implements ResultService {
     @Override
     @Transactional
     public ResultDTO createResult(ResultDTO resultDTO) {
-        Result result = new Result();
-
-        // 🧑 Set User
-        User user = userRepository.findById(resultDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + resultDTO.getUserId()));
-        result.setUser(user);
-
-        // 📝 Set Exam
-        Exam exam = examRepository.findById(resultDTO.getExamId())
-                .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + resultDTO.getExamId()));
-        result.setExam(exam);
-
-        // 📅 Set Submitted Time
+        Result result = modelMapper.map(resultDTO, Result.class);
+        List<Answer> answers = answerRepository.findByUserIdAndQuestionExamId(result.getUser().getId(),result.getExam().getId());
+        //adala userge eka exam ekaka quations tika loop karanawa
+        int score = 0;
+        for (Answer answer : answers) {
+            if(answer.isCorrect()){
+                score++;
+            }
+        }
+        result.setScore(score);
         result.setSubmittedAt(LocalDateTime.now());
-
-        // 💾 Save result early to attach to answers (because answers need a result reference)
-        Result savedResult = resultRepository.save(result);
-
-        // ✅ Save Answers without mutating score inside lambda
-        List<Answer> answers = resultDTO.getAnswers().stream().map(answerDTO -> {
-            Answer answer = new Answer();
-            answer.setResult(savedResult);
-
-            Question question = questionRepository.findById(answerDTO.getQuestionId())
-                    .orElseThrow(() -> new RuntimeException("Question not found with ID: " + answerDTO.getQuestionId()));
-            answer.setQuestion(question);
-
-            answer.setSelectedOption(answerDTO.getSelectedOption());
-
-            boolean isCorrect = question.getCorrectOption().equals(answerDTO.getSelectedOption());
-            answer.setCorrect(isCorrect);
-
-            return answer;
-        }).collect(Collectors.toList());
-
-        answerRepository.saveAll(answers);
-
-        // Calculate score AFTER answers are created
-        int score = (int) answers.stream().filter(Answer::isCorrect).count();
-
-        // 🧮 Update score and resave
-        savedResult.setScore(score);
-        savedResult.setAnswers(answers);
-        Result finalResult = resultRepository.save(savedResult);
-
-        // 🛠️ Map and return DTO
-        ResultDTO responseDTO = modelMapper.map(finalResult, ResultDTO.class);
-        List<AnswerDTO> answerDTOList = finalResult.getAnswers().stream()
-                .map(a -> modelMapper.map(a, AnswerDTO.class))
-                .collect(Collectors.toList());
-        responseDTO.setAnswers(answerDTOList);
-
-        return responseDTO;
+        result.setExam(answers.get(0).getQuestion().getExam());
+        result.setUser(answers.get(0).getUser());
+        result.setAnswers(answers);
+        Result res =  resultRepository.save(result);
+        for(Answer answer : answers){
+            answer.setResult(res);
+        }
+        return modelMapper.map(res, ResultDTO.class);
     }
-
 
     @Override
     public ResultDTO getResultById(Long id) {

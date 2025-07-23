@@ -24,12 +24,12 @@ public class ExamController {
         return ResponseEntity.ok(examService.getExamById(id));
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<ExamDTO> createExam(@RequestBody ExamDTO examDTO){
+        System.out.println("Sasaaaaaaaaaaaaaaaaaaaaaa");
         ExamDTO created = examService.createExam(examDTO);
         return ResponseEntity.status(201).body(created);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<ExamDTO> updateExam(@PathVariable Long id, @RequestBody ExamDTO examDTO) {

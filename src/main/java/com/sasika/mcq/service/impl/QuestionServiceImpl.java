@@ -27,10 +27,29 @@ public class QuestionServiceImpl implements QuestionService {
         this.modelMapper = modelMapper;
     }
 
+//    @Override
+//    public QuestionDTO createQuestion(Long examId, QuestionDTO questionDTO) {
+//        Exam exam = examRepository.findById(examId)
+//                .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
+//
+//        Question question = modelMapper.map(questionDTO, Question.class);
+//        question.setExam(exam);
+//
+//        Question savedQuestion = questionRepository.save(question);
+//        return modelMapper.map(savedQuestion, QuestionDTO.class);
+//    }
+
     @Override
     public QuestionDTO createQuestion(Long examId, QuestionDTO questionDTO) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
+
+        List<Question> existingQuestions = questionRepository.findByExamId(examId);
+
+        if (existingQuestions.size() >= 5) {
+            // Max 5 questions per exam
+            throw new IllegalStateException("Maximum number of questions reached for this exam.");
+        }
 
         Question question = modelMapper.map(questionDTO, Question.class);
         question.setExam(exam);
@@ -38,6 +57,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question savedQuestion = questionRepository.save(question);
         return modelMapper.map(savedQuestion, QuestionDTO.class);
     }
+
 
     @Override
     public List<QuestionDTO> getQuestionsByExamId(Long examId) {

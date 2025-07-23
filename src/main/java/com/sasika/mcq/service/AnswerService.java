@@ -8,6 +8,12 @@ public interface AnswerService {
 
     AnswerDTO createAnswer(AnswerDTO answerDTO);
 
+    List<AnswerDTO> getAnswersByQuestionAndUser(Long questionId, Long userId);
+
+    List<AnswerDTO> getAnswersByUserAndExam(Long userId, Long examId);
+
+    ///   //////////////////////////
+
     AnswerDTO getAnswerById(Long id);
 
     List<AnswerDTO> getAnswersByResultId(Long resultId);

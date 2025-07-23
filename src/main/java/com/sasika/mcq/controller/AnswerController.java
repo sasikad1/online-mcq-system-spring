@@ -22,6 +22,28 @@ public class AnswerController {
         return ResponseEntity.ok(answerService.createAnswer(answerDTO));
     }
 
+    @GetMapping("/by-question-and-user")
+    public ResponseEntity<List<AnswerDTO>> getAnswersByQuestionAndUser(
+            @RequestParam Long questionId,
+            @RequestParam Long userId
+    ) {
+        List<AnswerDTO> answers = answerService.getAnswersByQuestionAndUser(questionId, userId);
+        return ResponseEntity.ok(answers);
+    }
+
+    @GetMapping("/by-user-and-exam")
+    public ResponseEntity<List<AnswerDTO>> getAnswersByUserAndExam(
+            @RequestParam Long userId,
+            @RequestParam Long examId
+    ) {
+        List<AnswerDTO> answers = answerService.getAnswersByUserAndExam(userId, examId);
+        return ResponseEntity.ok(answers);
+    }
+
+    /////////////////////////////////////////////////
+
+
+
     @GetMapping("/{id}")
     public ResponseEntity<AnswerDTO> getAnswerById(@PathVariable Long id) {
         return ResponseEntity.ok(answerService.getAnswerById(id));

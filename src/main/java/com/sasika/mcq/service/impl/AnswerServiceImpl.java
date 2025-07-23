@@ -32,18 +32,42 @@ public class AnswerServiceImpl implements AnswerService {
         this.modelMapper = modelMapper;
     }
 
+    //create  answer without reasult
     @Override
     public AnswerDTO createAnswer(AnswerDTO answerDTO) {
-        // Optionally check if related result exists
-        Result result = resultRepository.findById(answerDTO.getResultId())
-                .orElseThrow(() -> new RuntimeException("Result not found with ID: " + answerDTO.getResultId()));
-
         Answer answer = modelMapper.map(answerDTO, Answer.class);
-        answer.setResult(result);
+
+        Question question = questionRepository.findById(answer.getQuestion().getId())
+                .orElseThrow(() -> new RuntimeException("Question not found with ID: " + answer.getQuestion().getId()));
+
+        if (question.getCorrectOption() != null && question.getCorrectOption().equals(answer.getSelectedOption())) {
+            answer.setCorrect(true);
+        }
 
         Answer savedAnswer = answerRepository.save(answer);
         return modelMapper.map(savedAnswer, AnswerDTO.class);
     }
+
+    @Override
+    public List<AnswerDTO> getAnswersByQuestionAndUser(Long questionId, Long userId) {
+        List<Answer> answers = answerRepository.findByQuestionIdAndUserId(questionId, userId);
+        return answers.stream()
+                .map(answer -> modelMapper.map(answer, AnswerDTO.class))
+                .toList();
+    }
+
+
+    @Override
+    public List<AnswerDTO> getAnswersByUserAndExam(Long userId, Long examId) {
+        List<Answer> answers = answerRepository.findByUserIdAndQuestionExamId(userId, examId);
+        return answers.stream()
+                .map(answer -> modelMapper.map(answer, AnswerDTO.class))
+                .toList();
+    }
+
+
+
+
 
     @Override
     public AnswerDTO getAnswerById(Long id) {
@@ -65,7 +89,6 @@ public class AnswerServiceImpl implements AnswerService {
         Answer existingAnswer = answerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Answer not found with ID: " + id));
 
-        // ✅ Fetch and set the Question object
         Question question = questionRepository.findById(answerDTO.getQuestionId())
                 .orElseThrow(() -> new RuntimeException("Question not found with ID: " + answerDTO.getQuestionId()));
         existingAnswer.setQuestion(question);

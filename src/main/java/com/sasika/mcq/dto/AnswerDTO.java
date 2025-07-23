@@ -9,5 +9,5 @@ public class AnswerDTO {
     private Long questionId;
     private String selectedOption;
     private boolean isCorrect;
-
+    private Long userId;
 }
