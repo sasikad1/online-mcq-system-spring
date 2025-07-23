@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ResultService {
 
+    List<ResultDTO> findAllResults();
+
     // Create a new result (after an exam submission)
     ResultDTO createResult(ResultDTO resultDTO);
 

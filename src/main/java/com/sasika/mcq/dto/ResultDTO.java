@@ -17,4 +17,9 @@ public class ResultDTO {
     private int score;
     private LocalDateTime submittedAt;
     private List<AnswerDTO> answers;
+    private String userName;
+    private String examName;
+    private List<Long> questionIds; // ✅ Add this
+    private List<String> correctQuestions;
+    private List<String> incorrectQuestions;
 }

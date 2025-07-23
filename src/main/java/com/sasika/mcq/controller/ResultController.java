@@ -10,10 +10,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/results")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class ResultController {
 
     private final ResultService resultService;
+
+    @GetMapping
+    public ResponseEntity<List<ResultDTO>> findAllResults() {
+        List<ResultDTO> resultDTOs = resultService.findAllResults();
+        return ResponseEntity.ok(resultDTOs);
+    }
 
     // Create a new Result (submit exam)
     @PostMapping

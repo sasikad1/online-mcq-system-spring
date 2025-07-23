@@ -1,6 +1,7 @@
 package com.sasika.mcq.service.impl;
 
 import com.sasika.mcq.dto.AnswerDTO;
+import com.sasika.mcq.dto.ExamDTO;
 import com.sasika.mcq.dto.ResultDTO;
 import com.sasika.mcq.entity.*;
 import com.sasika.mcq.repo.*;
@@ -11,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,12 +27,53 @@ public class ResultServiceImpl implements ResultService {
     private final AnswerRepository answerRepository;
     private final ModelMapper modelMapper;
 
+
+    @Override
+    public List<ResultDTO> findAllResults() {
+        return resultRepository.findAll()
+                .stream()
+                .map(result -> {
+                    ResultDTO dto = modelMapper.map(result, ResultDTO.class);
+
+                    List<String> correctQuestions = new ArrayList<>();
+                    List<String> incorrectQuestions = new ArrayList<>();
+
+                    List<Answer> answers = result.getAnswers();
+                    for(Answer answer : answers){
+                        if(answer.isCorrect()){
+                            correctQuestions.add(answer.getQuestion().getQuestionText());
+                        }else{
+                            incorrectQuestions.add(answer.getQuestion().getQuestionText());
+                        }
+                    }
+
+                    dto.setCorrectQuestions(correctQuestions);
+                    dto.setIncorrectQuestions(incorrectQuestions);
+                    // Add user name
+                    if (result.getUser() != null) {
+                        dto.setUserId(result.getUser().getId());
+                        dto.setUserName(result.getUser().getName()); // ✅ Set user name
+                    }
+
+                    // Optional: add exam name
+                    if (result.getExam() != null) {
+                        dto.setExamId(result.getExam().getId());
+                        dto.setExamName(result.getExam().getTitle()); // ✅ Set exam name
+                    }
+
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
     @Override
     @Transactional
     public ResultDTO createResult(ResultDTO resultDTO) {
         Result result = modelMapper.map(resultDTO, Result.class);
         List<Answer> answers = answerRepository.findByUserIdAndQuestionExamId(result.getUser().getId(),result.getExam().getId());
-        //adala userge eka exam ekaka quations tika loop karanawa
+        //adala userge adala exam eke question tika loop karanawa
         int score = 0;
         for (Answer answer : answers) {
             if(answer.isCorrect()){

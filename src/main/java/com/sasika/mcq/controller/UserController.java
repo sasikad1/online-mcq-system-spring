@@ -13,11 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users/")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> userDTOS = userService.getAllUsers();
         return ResponseEntity.ok(userDTOS);
     }

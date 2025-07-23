@@ -27,17 +27,6 @@ public class QuestionServiceImpl implements QuestionService {
         this.modelMapper = modelMapper;
     }
 
-//    @Override
-//    public QuestionDTO createQuestion(Long examId, QuestionDTO questionDTO) {
-//        Exam exam = examRepository.findById(examId)
-//                .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
-//
-//        Question question = modelMapper.map(questionDTO, Question.class);
-//        question.setExam(exam);
-//
-//        Question savedQuestion = questionRepository.save(question);
-//        return modelMapper.map(savedQuestion, QuestionDTO.class);
-//    }
 
     @Override
     public QuestionDTO createQuestion(Long examId, QuestionDTO questionDTO) {

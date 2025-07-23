@@ -25,5 +25,6 @@ public class User {
     private List<Result> results;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Answer> answers;
 }

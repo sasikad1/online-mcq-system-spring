@@ -113,7 +113,7 @@ Alternatively, you can use a simple init script in your service layer during app
 
 ### 📬 Contact
 
-Maintained by **Sasika Dilum**  
+Developed by **Sasika Dilum**  
 📧 Email: [sasikadilum40@gmail.com](mailto:sasikadilum40@gmail.com)
 
 ---

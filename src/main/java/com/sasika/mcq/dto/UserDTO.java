@@ -12,5 +12,5 @@ public class UserDTO {
     private Long id;
     private String name;
     private String email;
-    private List<Answer> answers;
+//    private List<Answer> answers;
 }

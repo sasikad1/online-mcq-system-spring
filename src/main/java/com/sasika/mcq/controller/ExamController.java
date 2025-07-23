@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/exams")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ExamController {
     private final ExamService examService;
 
