@@ -27,7 +27,7 @@ public class UserController {
     // Login endpoint  http://localhost:8081/api/users/login?name=sasika&password=123123
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String name, @RequestParam String password) {
-        System.out.println("TTTTTEEEEESSSSSSSSTTTTTTT");
+        System.out.println("SuccessFully logged in");
         UserDTO userDTO = userService.authenticateUser(name, password);
         if (userDTO != null) {
             return ResponseEntity.ok(userDTO);
@@ -48,6 +48,7 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
+    //createUser
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
         UserDTO createdUser = userService.createUser(userDTO);

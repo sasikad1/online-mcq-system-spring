@@ -4,9 +4,11 @@ import com.sasika.mcq.dto.AnswerDTO;
 import com.sasika.mcq.entity.Answer;
 import com.sasika.mcq.entity.Question;
 import com.sasika.mcq.entity.Result;
+import com.sasika.mcq.entity.User;
 import com.sasika.mcq.repo.AnswerRepository;
 import com.sasika.mcq.repo.QuestionRepository;
 import com.sasika.mcq.repo.ResultRepository;
+import com.sasika.mcq.repo.UserRepository;
 import com.sasika.mcq.service.AnswerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,15 +21,18 @@ public class AnswerServiceImpl implements AnswerService {
 
     private final AnswerRepository answerRepository;
     private final ResultRepository resultRepository;
+    private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
 
     public AnswerServiceImpl(AnswerRepository answerRepository,
                              ResultRepository resultRepository,
+                             UserRepository userRepository,
                              QuestionRepository questionRepository,
                              ModelMapper modelMapper) {
         this.answerRepository = answerRepository;
         this.resultRepository = resultRepository;
+        this.userRepository = userRepository;
         this.questionRepository = questionRepository;
         this.modelMapper = modelMapper;
     }
@@ -47,6 +52,33 @@ public class AnswerServiceImpl implements AnswerService {
         Answer savedAnswer = answerRepository.save(answer);
         return modelMapper.map(savedAnswer, AnswerDTO.class);
     }
+
+//    @Override
+//    public AnswerDTO createAnswer(AnswerDTO answerDTO) {
+//        Answer answer = new Answer();
+//
+//        // Set the question
+//        Question question = questionRepository.findById(answerDTO.getQuestionId())
+//                .orElseThrow(() -> new RuntimeException("Question not found with ID: " + answerDTO.getQuestionId()));
+//        answer.setQuestion(question);
+//
+//        // Set the user
+//        User user = userRepository.findById(answerDTO.getUserId())
+//                .orElseThrow(() -> new RuntimeException("User not found with ID: " + answerDTO.getUserId()));
+//        answer.setUser(user);
+//
+//        // Set the selected option
+//        answer.setSelectedOption(answerDTO.getSelectedOption());
+//
+//        // Check correctness
+//        if (question.getCorrectOption() != null && question.getCorrectOption().equals(answer.getSelectedOption())) {
+//            answer.setCorrect(true);
+//        }
+//
+//        Answer savedAnswer = answerRepository.save(answer);
+//        return modelMapper.map(savedAnswer, AnswerDTO.class);
+//    }
+
 
     @Override
     public List<AnswerDTO> getAnswersByQuestionAndUser(Long questionId, Long userId) {
