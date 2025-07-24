@@ -24,12 +24,19 @@ public class QuestionController {
         return ResponseEntity.ok(created);
     }
 
+    //getQuestionsByEmailId
     @GetMapping("/exam/{examId}")
     public ResponseEntity<List<QuestionDTO>> getQuestionsByExamId(@PathVariable Long examId) {
         List<QuestionDTO> questions = questionService.getQuestionsByExamId(examId);
         return ResponseEntity.ok(questions);
     }
 
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////
     @GetMapping("/{questionId}")
     public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Long questionId) {
         QuestionDTO question = questionService.getQuestionById(questionId);

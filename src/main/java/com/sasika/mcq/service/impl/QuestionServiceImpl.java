@@ -28,6 +28,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
+//    create question
     @Override
     public QuestionDTO createQuestion(Long examId, QuestionDTO questionDTO) {
         Exam exam = examRepository.findById(examId)
@@ -47,7 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
         return modelMapper.map(savedQuestion, QuestionDTO.class);
     }
 
-
+//getQuestionByEmailId
     @Override
     public List<QuestionDTO> getQuestionsByExamId(Long examId) {
         List<Question> questions = questionRepository.findByExamId(examId);
@@ -55,6 +56,24 @@ public class QuestionServiceImpl implements QuestionService {
                 .map(question -> modelMapper.map(question, QuestionDTO.class))
                 .collect(Collectors.toList());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public QuestionDTO getQuestionById(Long questionId) {

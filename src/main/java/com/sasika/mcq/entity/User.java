@@ -20,6 +20,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
+    private String password;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Result> results;

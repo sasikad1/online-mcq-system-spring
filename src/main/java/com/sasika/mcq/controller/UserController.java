@@ -23,6 +23,19 @@ public class UserController {
         return ResponseEntity.ok(userDTOS);
     }
 
+
+    // Login endpoint  http://localhost:8081/api/users/login?name=sasika&password=123123
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String name, @RequestParam String password) {
+        System.out.println("TTTTTEEEEESSSSSSSSTTTTTTT");
+        UserDTO userDTO = userService.authenticateUser(name, password);
+        if (userDTO != null) {
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.status(401).body("Invalid name or password");
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
         UserDTO userDTO = userService.getUserById(id);

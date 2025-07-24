@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+//get all Users
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
@@ -25,6 +26,14 @@ public class UserServiceImpl implements UserService {
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
+
+    //    Login
+    public UserDTO authenticateUser(String name, String password) {
+        return userRepository.findByNameAndPassword(name, password)
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .orElse(null);
+    }
+
 
     @Override
     public UserDTO getUserById(Long id) {

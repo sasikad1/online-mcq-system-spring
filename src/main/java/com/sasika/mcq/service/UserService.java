@@ -11,6 +11,9 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> getAllUsers();
 
+//    login
+    UserDTO authenticateUser(String name, String password);
+
     UserDTO getUserById(Long id);
 
     UserDTO getUserByEmail(String email);
