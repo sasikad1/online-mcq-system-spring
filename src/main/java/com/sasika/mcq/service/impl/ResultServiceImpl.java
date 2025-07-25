@@ -68,29 +68,55 @@ public class ResultServiceImpl implements ResultService {
     }
 
 
-    @Override
-    @Transactional
-    public ResultDTO createResult(ResultDTO resultDTO) {
-        Result result = modelMapper.map(resultDTO, Result.class);
-        List<Answer> answers = answerRepository.findByUserIdAndQuestionExamId(result.getUser().getId(),result.getExam().getId());
-        //adala userge adala exam eke question tika loop karanawa
-        int score = 0;
-        for (Answer answer : answers) {
-            if(answer.isCorrect()){
-                score++;
-            }
+//
+@Override
+@Transactional
+public ResultDTO createResult(ResultDTO resultDTO) {
+    Result result = modelMapper.map(resultDTO, Result.class);
+
+    List<Answer> answers = answerRepository.findByUserIdAndQuestionExamId(
+            result.getUser().getId(), result.getExam().getId());
+
+    int score = 0;
+    List<Long> questionIds = new ArrayList<>();
+    List<String> correctQuestions = new ArrayList<>();
+    List<String> incorrectQuestions = new ArrayList<>();
+
+    for (Answer answer : answers) {
+        questionIds.add(answer.getQuestion().getId());
+        if (answer.isCorrect()) {
+            score++;
+            correctQuestions.add(answer.getQuestion().getQuestionText()); // assuming `getQuestionText()`
+        } else {
+            incorrectQuestions.add(answer.getQuestion().getQuestionText());
         }
-        result.setScore(score);
-        result.setSubmittedAt(LocalDateTime.now());
-        result.setExam(answers.get(0).getQuestion().getExam());
-        result.setUser(answers.get(0).getUser());
-        result.setAnswers(answers);
-        Result res =  resultRepository.save(result);
-        for(Answer answer : answers){
-            answer.setResult(res);
-        }
-        return modelMapper.map(res, ResultDTO.class);
     }
+
+    result.setScore(score);
+    result.setSubmittedAt(LocalDateTime.now());
+    result.setExam(answers.get(0).getQuestion().getExam());
+    result.setUser(answers.get(0).getUser());
+    result.setAnswers(answers);
+    Result savedResult = resultRepository.save(result);
+
+    // Update answers with result link
+    for (Answer answer : answers) {
+        answer.setResult(savedResult);
+    }
+
+    // Map result to DTO
+    ResultDTO responseDTO = modelMapper.map(savedResult, ResultDTO.class);
+    responseDTO.setUserId(savedResult.getUser().getId());
+    responseDTO.setExamId(savedResult.getExam().getId());
+    responseDTO.setUserName(savedResult.getUser().getName());
+    responseDTO.setExamName(savedResult.getExam().getTitle()); // assuming exam has name
+    responseDTO.setQuestionIds(questionIds);
+    responseDTO.setCorrectQuestions(correctQuestions);
+    responseDTO.setIncorrectQuestions(incorrectQuestions);
+
+    return responseDTO;
+}
+
 
     @Override
     public ResultDTO getResultById(Long id) {
